@@ -15,18 +15,38 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#"> <img src="logo.png" alt="Logo" width="40" class="me-2"> IND'S 88 TRANS </a>
+            <a class="navbar-brand fw-bold" href="#"> <img src="assets/img/inds88-logo.png" alt="Logo" width="40" class="me-2"> IND'S 88 TRANS </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"> <span class="navbar-toggler-icon"></span> </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="/">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link" href="/armada-bus">Armada Bus</a></li>
                     <li class="nav-item"><a class="nav-link" href="/paket-wisata">Paket Wisata</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Booking</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Promo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Tentang Kami</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Kontak</a></li>
-                </ul> <a href="#" class="gradient-button btn ms-lg-3">Booking Sekarang</a> </div>
+                    <li class="nav-item"><a class="nav-link" href="/booking-bus">Booking Bus</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/booking-wisata">Booking Wisata</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/promo">Promo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/tentang-kami">Tentang Kami</a></li>
+                </ul> 
+                <?php
+                use bus\Project\core\Session;
+
+                if (!empty(Session::get('user'))) :
+                ?>
+                <a href="/profile" 
+                        class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center me-3"
+                        style="width: 40px; height: 40px;">
+                          <i class="bi bi-person fs-5"></i>
+                      </a>
+                <a href="/pesanan-saya-bus" 
+                class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center me-3"
+                style="width: 40px; height: 40px;">
+                    <i class="bi bi-cart fs-5"></i>
+                </a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+                <?php else :?>
+                    <a href="/login" class="gradient-button btn ms-lg-3">Booking Sekarang</a> </div>
+                <?php endif; ?>
+
         </div>
     </nav>
     <!-- Hero Section -->
@@ -36,31 +56,32 @@
                 <div class="col-lg-6 text-white">
                     <h1 class="fw-bold">Jelajahi Indonesia<br>dengan <span class="text-warning">Bus Wisata Terbaik</span></h1>
                     <p>Nikmati perjalanan yang aman, nyaman, dan berkesan bersama armada bus modern kami. Destinasi impian Anda menanti!</p>
-                    <div class="d-flex gap-3"> <a href="#" class="gradient-button btn">Booking Sekarang</a> <a href="#" class="btn gradient-button-2">Lihat Armada</a> </div>
+                    <div class="d-flex gap-3"> <a href="/booking-bus" class="gradient-button btn">Booking Sekarang</a> <a href="/armada-bus" class="btn gradient-button-2">Lihat Armada</a> </div>
                     <div class="d-flex gap-4 mt-4 small"> <span><i class="bi bi-shield-check"></i> Asuransi Perjalanan</span> <span><i class="bi bi-people"></i> 10.000+ Pelanggan</span> <span><i class="bi bi-star"></i> Rating 4.8/5</span> </div>
                 </div>
                 <div class="col-lg-5 offset-lg-1">
                     <div class="card booking-card p-4">
                         <h5 class="mb-3 fw-bold">Booking Cepat</h5>
-                        <form>
+                        <form action="/paket-wisata">
                             <div class="mb-3">
                                 <label class="form-label">Tujuan Wisata</label>
-                                <select class="form-select">
-                                    <option>Pilih Destinasi</option>
-                                    <option>Bali</option>
-                                    <option>Jogja</option>
-                                    <option>Lombok</option>
+                                <select class="form-select" name="destination">
+                                        <option>Pilih Destinasi</option>
+                                    <?php foreach($data as $a) : ?>
+                                        <option value="<?= $a['id'] ?>"><?= $a['name']  ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Tanggal</label>
-                                <input type="date" class="form-control"> </div>
+                                <input type="date" class="form-control" name="date"> </div>
                             <div class="mb-3">
                                 <label class="form-label">Penumpang</label>
-                                <select class="form-select">
-                                    <option>20 Orang</option>
-                                    <option>30 Orang</option>
-                                    <option>40 Orang</option>
+                                <select class="form-select" name="capacity">
+                                    <option value="20">20 Orang</option>
+                                    <option value="30">30 Orang</option>
+                                    <option value="40">40 Orang</option>
+                                    <option value="50">50 Orang</option>
                                 </select>
                             </div>
                             <button class="gradient-button btn w-100">Cari Bus Tersedia</button>
@@ -121,49 +142,70 @@
     <!-- Section Armada Bus -->
     <section class="py-5">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold">Pilihan <span class="text-danger">Armada Bus</span> Terbaik</h2>
-                <p>Berbagai tipe bus untuk kebutuhan perjalanan Anda, mudik, atau wisata hingga jarak jauh.</p>
-            </div>
             <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm"> <img src="assets/img/bus-fleet.jpg" class="card-img-top" alt="Executive Class">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Executive Class</h5>
-                            <p class="card-text small">Bus mewah dengan fasilitas premium.</p>
-                            <div class="d-flex justify-content-between align-items-center"> <span class="fw-bold text-danger">Mulai Rp 2.000.000</span> <a href="#" class="btn btn-outline-danger btn-sm">Detail</a> </div>
-                        </div>
-                    </div>
+      <?php if (!empty($datas)): ?>
+        <?php foreach ($datas as $bus): ?>
+          <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+              <div class="position-relative">
+                <img src="data:image/jpeg;base64,<?= base64_encode($bus['image']) ?>"  class="w-100 object-fit-cover">
+                <span class="badge bg-danger position-absolute top-0 end-0 m-2">
+                  <?= htmlspecialchars($bus['capacity']) ?> Penumpang
+                </span>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div>
+                    <h5 class="fw-bold mb-0"><?= htmlspecialchars($bus['name']) ?></h5>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-star-fill text-warning me-1"></i>
+                    <p class="mb-0">
+                      <?= $bus['avg_rating'] ? number_format($bus['avg_rating'], 0) : '-' ?> 
+                      (<?= $bus['rating_count'] ?> ulasan)
+                    </p>
+                  </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm"> <img src="assets/img/bus-interior.jpg" class="card-img-top" alt="Premium Comfort">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Premium Comfort</h5>
-                            <p class="card-text small">Kenyamanan ekstra untuk perjalanan jauh.</p>
-                            <div class="d-flex justify-content-between align-items-center"> <span class="fw-bold text-danger">Mulai Rp 1.500.000</span> <a href="#" class="btn btn-outline-danger btn-sm">Detail</a> </div>
-                        </div>
-                    </div>
+                <p class="small mb-2"><?= htmlspecialchars($bus['description']) ?></p>
+                
+                <div class="d-flex flex-wrap gap-2 small mb-3">
+                  <?php 
+                    $features = explode(',', $bus['features']);
+                    foreach ($features as $feature): 
+                  ?>
+                    <span class="badge bg-light text-dark border"><?= htmlspecialchars(trim($feature)) ?></span>
+                  <?php endforeach; ?>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm"> <img src="assets/img/bus-fleet.jpg" class="card-img-top" alt="Family Bus">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Family Vias</h5>
-                            <p class="card-text small">Cocok untuk perjalanan keluarga.</p>
-                            <div class="d-flex justify-content-between align-items-center"> <span class="fw-bold text-danger">Mulai Rp 1.200.000</span> <a href="#" class="btn btn-outline-danger btn-sm">Detail</a> </div>
-                        </div>
-                    </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="fw-bold text-danger">
+                    Rp <?= number_format($bus['price'], 0, ',', '.') ?> / hari
+                  </span>
+                  <div class="d-flex align-items-center">
+                    <a href="/booking-bus" class="btn btn-danger btn-sm me-2">Booking</a>
+                  </div>
                 </div>
+              </div>
             </div>
-            <div class="text-center mt-4"> <a class="gradient-button btn text-white"> Lihat Semua Armada <span class="arrow">→</span> </a> </div>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <div class="col-12 text-center">
+          <p class="text-muted">Tidak ada data bus tersedia.</p>
+        </div>
+      <?php endif; ?>
+    </div>
+            <div class="text-center mt-4"> <a href="/armada-bus" class="gradient-button btn text-white"> Lihat Semua Armada <span class="arrow">→</span> </a> </div>
         </div>
     </section>
+    
     <!-- Footer -->
     <footer class="bg-danger text-white pt-5 pb-3">
         <div class="container">
             <div class="row gy-4">
                 <!-- Kolom 1 -->
                 <div class="col-md-5">
-                    <div class="d-flex align-items-center mb-3"> <img src="logo.png" alt="Logo" width="40" class="me-2">
+                    <div class="d-flex align-items-center mb-3"> <img src="assets/img/inds88-logo.png" alt="Logo" width="40" class="me-2">
                         <div>
                             <h5 class="mb-0 fw-bold">IND'S 88 TRANS</h5> <small>Travel Indonesia</small> </div>
                     </div>
@@ -174,12 +216,12 @@
                 <div class="col-md-3">
                     <h6 class="fw-bold">Menu Utama</h6>
                     <ul class="list-unstyled small">
-                        <li><a href="#" class="text-white text-decoration-none">Beranda</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Armada Bus</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Paket Wisata</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Booking</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Promo</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Tentang Kami</a></li>
+                        <li><a href="/" class="text-white text-decoration-none">Beranda</a></li>
+                        <li><a href="/armada-bus" class="text-white text-decoration-none">Armada Bus</a></li>
+                        <li><a href="/paket-wisata" class="text-white text-decoration-none">Paket Wisata</a></li>
+                        <li><a href="/booking-bus" class="text-white text-decoration-none">Booking</a></li>
+                        <li><a href="/booking-wisata" class="text-white text-decoration-none">Promo</a></li>
+                        <li><a href="/tentang-kami" class="text-white text-decoration-none">Tentang Kami</a></li>
                     </ul>
                 </div>
                 <!-- Kolom 3 -->

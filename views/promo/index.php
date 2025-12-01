@@ -21,6 +21,7 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>Kode</th>
+                            <th>Jumlah Promo</th>
                             <th>Tanggal Mulai</th>
                             <th>Tanggal Berakhir</th>
                             <th>Slot</th>
@@ -34,6 +35,7 @@
                                     <td><?= $no++ ?></td>
                                     <td><?= htmlspecialchars($p['name']) ?></td>
                                     <td><?= htmlspecialchars($p['code']) ?></td>
+                                    <td><?= htmlspecialchars($p['amount']) ?></td>
                                     <td><?= htmlspecialchars($p['start_date']) ?></td>
                                     <td><?= htmlspecialchars($p['end_date']) ?></td>
                                     <td><?= htmlspecialchars($p['slot']) ?></td>

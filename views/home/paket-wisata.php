@@ -14,29 +14,41 @@
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg bg-white shadow-sm">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="#">
-        <img src="logo.png" alt="Logo" width="40" class="me-2">
-        IND'S 88 TRANS
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link active" href="/">Beranda</a></li>
-          <li class="nav-item"><a class="nav-link" href="/armada-bus">Armada Bus</a></li>
-          <li class="nav-item"><a class="nav-link" href="/paket-wisata">Paket Wisata</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Booking</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Promo</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Tentang Kami</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Kontak</a></li>
-        </ul>
-        <a href="#" class="gradient-button btn ms-lg-3">Booking Sekarang</a>
-      </div>
-    </div>
-  </nav>
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"> <img src="assets/img/inds88-logo.png" alt="Logo" width="40" class="me-2"> IND'S 88 TRANS </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"> <span class="navbar-toggler-icon"></span> </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/armada-bus">Armada Bus</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/paket-wisata">Paket Wisata</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/booking-bus">Booking Bus</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/booking-wisata">Booking Wisata</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/promo">Promo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/tentang-kami">Tentang Kami</a></li>
+                </ul> 
+                <?php
+                use bus\Project\core\Session;
 
+                if (!empty(Session::get('user'))) :
+                ?>
+                <a href="/profile" 
+                        class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center me-3"
+                        style="width: 40px; height: 40px;">
+                          <i class="bi bi-person fs-5"></i>
+                      </a>
+                <a href="/pesanan-saya-bus" 
+                class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center me-3"
+                style="width: 40px; height: 40px;">
+                    <i class="bi bi-cart fs-5"></i>
+                </a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+                <?php else :?>
+                    <a href="/login" class="gradient-button btn ms-lg-3">Booking Sekarang</a> </div>
+                <?php endif; ?>
+
+        </div>
+    </nav>
 <section class="py-5 bg-light" id="paket-wisata">
   <div class="container">
     <div class="text-center mb-5">
@@ -44,57 +56,92 @@
       <p>Jelajahi keindahan Indonesia dengan paket wisata lengkap. Transport, hotel, makan, dan tour guide sudah termasuk!</p>
     </div>
 
-    <!-- Contoh dua kartu -->
     <div class="row g-4">
+  <?php if (!empty($pakets) && count($pakets) > 0): ?>
+    <?php foreach ($pakets as $paket): ?>
       <div class="col-md-6">
         <div class="card shadow-sm">
           <div class="position-relative">
-            <img src="assets/img/destinations.jpg" class="card-img-top" alt="Yogyakarta Heritage">
-            <span class="badge bg-danger position-absolute top-0 start-0 m-2">3 Hari 2 Malam</span>
-            <span class="badge bg-success position-absolute top-0 end-0 m-2">25–35 Orang</span>
-          </div>
-          <div class="card-body">
-            <h5 class="fw-bold">Yogyakarta Heritage 3D2N</h5>
-            <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> Yogyakarta | <i class="bi bi-clock"></i> 3H2M</p>
-            <div class="d-flex flex-wrap gap-2 small mb-2">
-              <span class="badge bg-light text-dark border">Borobudur</span>
-              <span class="badge bg-light text-dark border">Malioboro</span>
-              <span class="badge bg-light text-dark border">Prambanan</span>
-            </div>
-            <p class="fw-bold text-danger mb-0">Rp 750.000</p>
-          </div>
-        </div>
-      </div>
+            <?php if (!empty($paket['image'])): ?>
+              <img src="data:image/jpeg;base64,<?= base64_encode($paket['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($paket['name']) ?>">
+            <?php else: ?>
+              <img src="assets/img/destinations.jpg" class="card-img-top" alt="Default">
+            <?php endif; ?>
 
-      <div class="col-md-6">
-        <div class="card shadow-sm">
-          <div class="position-relative">
-            <img src="assets/img/destinations.jpg" class="card-img-top" alt="Bali Exotic">
-            <span class="badge bg-danger position-absolute top-0 start-0 m-2">4 Hari 3 Malam</span>
-            <span class="badge bg-success position-absolute top-0 end-0 m-2">20–30 Orang</span>
+            <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+              <?= $paket['duration_days'] ?> Hari <?= ($paket['duration_days'] - 1) ?> Malam
+            </span>
+
+            <span class="badge bg-success position-absolute top-0 end-0 m-2">
+              <?= htmlspecialchars($paket['fixed_capacity']) ?> Orang
+            </span>
           </div>
+
           <div class="card-body">
-            <h5 class="fw-bold">Bali Exotic 4D3N</h5>
-            <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> Bali | <i class="bi bi-clock"></i> 4H3M</p>
-            <div class="d-flex flex-wrap gap-2 small mb-2">
-              <span class="badge bg-light text-dark border">Tanah Lot</span>
-              <span class="badge bg-light text-dark border">Ubud</span>
-              <span class="badge bg-light text-dark border">Kintamani</span>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <h5 class="fw-bold mb-0"><?= htmlspecialchars($paket['name']) ?></h5>
+              </div>
+              <div class="d-flex align-items-center">
+                <i class="bi bi-star-fill text-warning me-1"></i>
+                <p class="mb-0">
+                  <?= $paket['avg_rating'] ? number_format($paket['avg_rating'], 0) : '-' ?> 
+                  (<?= $paket['rating_count'] ?> ulasan)
+                </p>
+              </div>
             </div>
-            <p class="fw-bold text-danger mb-0">Rp 1.200.000</p>
+
+            <p class="small text-muted mb-2">
+              <i class="bi bi-geo-alt"></i> <?= htmlspecialchars($paket['destination_name']) ?> |
+              <i class="bi bi-clock"></i> <?= $paket['duration_days'] ?>H<?= $paket['duration_days'] - 1 ?>M
+            </p>
+
+            <div class="d-flex flex-wrap gap-2 small mb-2">
+              <?php 
+                $tourPlaces = explode(',', $paket['tours'] ?? '');
+                foreach ($tourPlaces as $place): 
+                  if (trim($place) !== ''):
+              ?>
+                <span class="badge bg-light text-dark border"><?= htmlspecialchars(trim($place)) ?></span>
+              <?php endif; endforeach; ?>
+            </div>
+
+            <hr class="my-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fw-bold text-danger fs-5">
+                  Rp <?= number_format($paket['fixed_price'], 0, ',', '.') ?>
+                </span>
+                <?php if (!empty($paket['discount_price']) && $paket['discount_price'] < $paket['fixed_price']): ?>
+                  <span class="text-muted text-decoration-line-through small ms-1">
+                    Rp <?= number_format($paket['fixed_price'], 0, ',', '.') ?>
+                  </span>
+                <?php endif; ?>
+              </div>
+
+              <a href="/booking-wisata" class="btn btn-danger btn-sm px-3">
+                Booking Sekarang <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    <?php endforeach; ?>
+  <?php else: ?>
+    <div class="col-12 text-center py-5">
+      <h5 class="fw-bold text-muted">Paket wisata tidak ditemukan</h5>
+  <?php endif; ?>
+</div>
+
 
   <div class="text-center mt-5 py-5">
-      <h3 class="fw-bold mb-3">Paket Custom Sesuai Keinginan?</h3>
-      <p>Kami bisa buatkan paket wisata sesuai budget dan destinasi impian anda.</p>
-      <div class="d-flex justify-content-center gap-3 mt-4">
-        <a href="#" class="btn btn-danger px-4"><i class="bi bi-telephone me-2"></i>Konsultasi Gratis</a>
-        <a href="#" class="btn btn-dark px-4">Lihat Armada Bus →</a>
-      </div>
+    <h3 class="fw-bold mb-3">Paket Custom Sesuai Keinginan?</h3>
+    <p>Kami bisa buatkan paket wisata sesuai budget dan destinasi impian anda.</p>
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <a href="https://wa.me/+62" class="btn btn-danger px-4"><i class="bi bi-telephone me-2"></i>Konsultasi Gratis</a>
+      <a href="/armada-bus" class="btn btn-dark px-4">Lihat Armada Bus →</a>
     </div>
   </div>
 </section>
@@ -107,7 +154,7 @@
       <!-- Kolom 1 -->
       <div class="col-md-5">
         <div class="d-flex align-items-center mb-3">
-          <img src="logo.png" alt="Logo" width="40" class="me-2">
+          <img src="assets/img/inds88-logo.png" alt="Logo" width="40" class="me-2">
           <div>
             <h5 class="mb-0 fw-bold">IND'S 88 TRANS</h5>
             <small>Travel Indonesia</small>
@@ -129,12 +176,12 @@
       <div class="col-md-3">
         <h6 class="fw-bold">Menu Utama</h6>
         <ul class="list-unstyled small">
-          <li><a href="#" class="text-white text-decoration-none">Beranda</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Armada Bus</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Paket Wisata</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Booking</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Promo</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Tentang Kami</a></li>
+          <li><a href="/" class="text-white text-decoration-none">Beranda</a></li>
+          <li><a href="/armada-bus" class="text-white text-decoration-none">Armada Bus</a></li>
+          <li><a href="/paket-wisata" class="text-white text-decoration-none">Paket Wisata</a></li>
+          <li><a href="/booking-bus" class="text-white text-decoration-none">Booking</a></li>
+          <li><a href="/booking-wisata" class="text-white text-decoration-none">Promo</a></li>
+          <li><a href="/tentang-kami" class="text-white text-decoration-none">Tentang Kami</a></li>
         </ul>
       </div>
 

@@ -27,6 +27,11 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label fw-semibold">Jumlah Promo</label>
+                    <input type="number" name="amount" class="form-control" placeholder="Masukkan kode promo" required>
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Tanggal Mulai</label>
                     <input type="date" name="start_date" class="form-control" required>
                 </div>

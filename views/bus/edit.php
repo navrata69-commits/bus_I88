@@ -56,6 +56,15 @@
                     </div>
 
                     <div class="mb-3">
+                        <label>Tipe Bus</label>
+                        <select name="type_bus" class="form-select">
+                            <option value="Mini Bus" <?= $bus->type_bus == 'Mini Bus' ? 'selected' : '' ?>>Mini Bus</option>
+                            <option value="Medium Bus" <?= $bus->type_bus == 'Medium Bus' ? 'selected' : '' ?>>Medium Bus</option>
+                            <option value="Big Bus" <?= $bus->type_bus == 'Big Bus' ? 'selected' : '' ?>>Big Bus</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label>Deskripsi</label>
                         <textarea name="description" class="form-control" rows="3" required><?= htmlspecialchars($bus->description) ?></textarea>
                     </div>

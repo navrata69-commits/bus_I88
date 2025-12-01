@@ -50,6 +50,15 @@
         </div>
 
         <div class="mb-3">
+            <label>Tipe Bus</label>
+            <select name="type_bus" class="form-select">
+                <option value="Mini Bus" >Mini Bus</option>
+                <option value="Medium Bus" >Medium Bus</option>
+                <option value="Big Bus" >Big Bus</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label>Deskripsi</label>
             <textarea name="description" class="form-control"></textarea>
         </div>

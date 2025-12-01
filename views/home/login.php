@@ -98,6 +98,14 @@
             <div class="card-header text-center py-3">
               <h3 class="font-weight-light my-2">Login</h3>
             </div>
+             <?php if (!empty($_SESSION['success'])): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($_SESSION['success']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
             <div class="card-body">
               <form method="POST" action="/login">
 
@@ -133,7 +141,7 @@
             </div>
             <div class="card-footer text-center py-3 bg-light">
               <div class="small">
-                <a href="register.html">Need an account? Sign up!</a>
+                <a href="/register">Need an account? Sign up!</a>
               </div>
             </div>
           </div>

@@ -25,6 +25,7 @@
                             <th>Nama</th>
                             <th>Jumlah Penumpang</th>
                             <th>Harga</th>
+                            <th>Tipe Bus</th>
                             <th>Deskripsi</th>
                             <th>Status</th>
                             <th>Aksi</th>
@@ -39,6 +40,7 @@
                                     <td><?= htmlspecialchars($bus['name']) ?></td>
                                     <td><?= htmlspecialchars($bus['capacity']) ?></td>
                                     <td>Rp <?= number_format($bus['price'], 0, ',', '.') ?></td>
+                                    <td><?= htmlspecialchars($bus['type_bus']) ?></td>
                                     <td><?= htmlspecialchars($bus['description']) ?></td>
                                     <td>
                                         <?php if ($bus['status'] === 'available'): ?>

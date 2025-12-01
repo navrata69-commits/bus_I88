@@ -16,13 +16,18 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label fw-semibold">Jumlah Promo</label>
+                    <input type="number" name="amount" class="form-control" value="<?= htmlspecialchars($promo->amount) ?>" required>
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Tanggal Mulai</label>
                     <input type="date" name="start_date" class="form-control" value="<?= htmlspecialchars($promo->start_date) ?>" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Tanggal Berakhir</label>
-                    <input type="datetime-local" name="end_date" class="form-control" value="<?= str_replace(' ', 'T', $promo->end_date) ?>" required>
+                    <input type="date" name="end_date" class="form-control" value="<?= str_replace(' ', 'T', $promo->end_date) ?>" required>
                 </div>
 
                 <div class="mb-3">
