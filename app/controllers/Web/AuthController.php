@@ -22,7 +22,6 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $email = $request->input('email');
-        $password = $request->input('password');
 
         if(!$request->validate([
             'email' => 'required',
@@ -36,12 +35,16 @@ class AuthController extends Controller
         if(Helper::bcryptVerify($request->input('password'), $user->password)) 
         {
             Session::set('user', [
-                'id' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role ?? 'user'
+                    'id' => $user->id,
+                    'email' => $user->email,
+                    'role' => $user->role ?? 'user'
             ]);
-
-            return $this->redirect('/dashboard');
+            if($user->role == 'admin')
+            {
+                return $this->redirect('/dashboard');
+            }else{
+                return $this->redirect('/');
+            }
         }
 
         return $this->view('home.login', ['error' => 'Username Atau Password Salah']);
@@ -51,5 +54,44 @@ class AuthController extends Controller
     {
         Session::destroy();
         return $this->redirect('/login');
+    }
+
+    public function register()
+    {
+        return $this->view('home.register');
+    }
+
+    public function createRegister(Request $request)
+    {
+        if (!$request->validate([
+            'name' => 'required|min:3',
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+            'confirm_password' => 'required'
+        ])) {
+            return $this->view('home.register', ['errors' => $request->getErrors()]);
+        }
+
+        $email = $request->input('email');
+        $existing = User::where('email', '=', $email)->first();
+
+        if ($existing) {
+            return $this->view('home.register', ['error' => 'Email sudah digunakan']);
+        }
+
+        $userId = User::create([
+            'name' => $request->input('name'),
+            'email' => $email,
+            'phone_number' => $request->input('phone_number') ?: null,
+            'password' => Helper::bcryptEncrypt($request->input('password')),
+            'role' => 'customer'
+        ]);
+
+        if ($userId) {
+            $_SESSION['success'] = 'Registrasi berhasil! Silakan login.';
+            return $this->redirect('/login');
+        } else {
+            return $this->view('home.register', ['error' => 'Terjadi kesalahan saat registrasi']);
+        }
     }
 }
