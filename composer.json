@@ -1,13 +1,14 @@
 {
-    "name": "bus/project",
-    "description": "template mvc",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "bus\\Project\\": "app"
-        }
-    },
-    "require": {
-        "vlucas/phpdotenv": "^5.6"
+  "name": "bus/project",
+  "description": "template mvc",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "bus\\Project\\": "app"
     }
+  },
+  "require": {
+    "vlucas/phpdotenv": "^5.6",
+    "dompdf/dompdf": "^3.1"
+  }
 }

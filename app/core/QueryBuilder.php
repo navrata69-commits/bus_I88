@@ -10,7 +10,11 @@ class QueryBuilder
     protected $joins = [];
     protected $conditions = [];
     protected $bindings = [];
+    protected $whereRaw = [];
     protected $limit;
+    protected $groupBy = [];
+    protected $orderBy = [];
+    protected $havings = [];
 
     public function __construct(\PDO $db, $table)
     {
@@ -24,6 +28,49 @@ class QueryBuilder
         return $this;
     }
 
+    public function orderBy($column, $direction = 'ASC')
+    {
+        $this->orderBy[] = "$column $direction";
+        return $this;
+    }
+
+    
+    public function orderByRaw($raw)
+    {
+        $this->orderBy[] = $raw;
+        return $this;
+    }
+
+    public function havingRaw($condition, $params = [])
+    {
+        $this->havings[] = $condition;
+        $this->bindings = array_merge($this->bindings, $params);
+        return $this;
+    }
+
+
+    public function groupBy($columns)
+    {
+        if (is_array($columns)) {
+            $this->groupBy = array_merge($this->groupBy, $columns);
+        } else {
+            $this->groupBy[] = $columns;
+        }
+        return $this;
+    }
+
+    public function whereRaw($raw, $params = [])
+    {
+        $this->whereRaw[] = $raw;
+
+        // jika ada binding (misal :start, :end), masukkan
+        foreach ($params as $key => $value) {
+            $this->bindings[$key] = $value;
+        }
+
+        return $this;
+    }
+
     public function join($table, $firstColumn, $operator = '=', $secondColumn = null, $type = 'INNER')
     {
         if (is_null($secondColumn)) {
@@ -34,6 +81,12 @@ class QueryBuilder
         $this->joins[] = "$type JOIN $table ON $firstColumn $operator $secondColumn";
         return $this;
     }
+
+    public function leftJoin($table, $firstColumn, $operator = '=', $secondColumn = null)
+    {
+        return $this->join($table, $firstColumn, $operator, $secondColumn, 'LEFT');
+    }
+
 
     public function where($column, $operator, $value)
     {
@@ -74,6 +127,27 @@ class QueryBuilder
 
         if ($this->conditions) {
             $query .= ' WHERE ' . implode(' AND ', $this->conditions);
+        }
+
+        if ($this->whereRaw) {
+            if (strpos($query, 'WHERE') === false) {
+                $query .= ' WHERE ' . implode(' AND ', $this->whereRaw);
+            } else {
+                $query .= ' AND ' . implode(' AND ', $this->whereRaw);
+            }
+        }
+
+
+        if ($this->groupBy) {
+            $query .= ' GROUP BY ' . implode(', ', $this->groupBy);
+        }
+
+        if (!empty($this->havings)) {
+            $query .= ' HAVING ' . implode(' AND ', $this->havings) . ' ';
+        }
+
+        if (!empty($this->orderBy)) {
+            $query .= ' ORDER BY ' . implode(', ', $this->orderBy);
         }
 
         if ($this->limit) {
@@ -124,5 +198,26 @@ class QueryBuilder
             'last_page' => ceil($total / $perPage),
         ];
     }
+
+    public function whereIn($column, array $values)
+    {
+        if (empty($values)) {
+            return $this;
+        }
+
+        // Buat placeholder parameter sesuai jumlah nilai di array
+        $placeholders = [];
+        foreach ($values as $index => $value) {
+            $param = str_replace('.', '_', $column) . "_in_" . $index;
+            $placeholders[] = ":$param";
+            $this->bindings[":$param"] = $value;
+        }
+
+        $placeholderString = implode(', ', $placeholders);
+        $this->conditions[] = "$column IN ($placeholderString)";
+
+        return $this;
+    }
+
 
 }

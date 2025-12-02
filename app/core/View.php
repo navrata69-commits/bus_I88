@@ -33,4 +33,20 @@ class View
         // Jika tidak ada layout, langsung tampilkan view
         include $viewPath;
     }
+
+    public static function renderToString($view, $data = [])
+    {
+        $viewPath = __DIR__ . '/../../views/' . str_replace('.', '/', $view) . '.php';
+
+        if (!file_exists($viewPath)) {
+            return "View file '$viewPath' not found.";
+        }
+
+        extract($data);
+
+        ob_start();
+        include $viewPath;
+        return ob_get_clean(); // <-- HTML sebagai string
+    }
+
 }

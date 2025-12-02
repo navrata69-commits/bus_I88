@@ -26,6 +26,7 @@ class PromoController extends Controller
             'code' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
+            'amount' => 'required',
             'slot' => 'required'
         ];
 
@@ -39,6 +40,7 @@ class PromoController extends Controller
         Promo::create([
             'name' => $request->input('name'),
             'code' => $request->input('code'),
+            'amount' => $request->input('amount'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
             'slot' => $request->input('slot')
@@ -72,6 +74,7 @@ class PromoController extends Controller
         $rules = [
             'name' => 'required|min:3|max:50',
             'code' => 'required',
+            'amount' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
             'slot' => 'required'
@@ -87,6 +90,7 @@ class PromoController extends Controller
         Promo::update($id, [
             'name' => $request->input('name'),
             'code' => $request->input('code'),
+            'amount' => $request->input('amount'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
             'slot' => $request->input('slot')

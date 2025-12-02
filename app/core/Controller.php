@@ -9,6 +9,10 @@ class Controller
         return View::render($path, $data, $layout);
     }
 
+    public function loadPdf($path, $data = [])
+    {
+        return View::renderToString($path, $data);
+    }
 
     public function redirect($url)
     {

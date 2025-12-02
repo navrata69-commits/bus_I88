@@ -8,4 +8,5 @@ class Destination extends Model
 {
     protected static $table = 'destinations';
     protected static $guarded = ['id'];
+    
 }

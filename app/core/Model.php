@@ -65,6 +65,8 @@ class Model
         return self::$db->lastInsertId(); // Mengembalikan ID dari entri yang baru dibuat
     }
 
+    
+
     public static function update($id, array $data)
     {
         self::init();
@@ -91,4 +93,37 @@ class Model
         $stmt->bindParam(':id', $id);
         return $stmt->execute(); // Mengembalikan true jika berhasil
     }
+
+    public static function deleteWhere($column, $value)
+    {
+        self::init();
+        $query = "DELETE FROM " . static::$table . " WHERE $column = :value";
+        $stmt = self::$db->prepare($query);
+        $stmt->bindParam(':value', $value);
+
+        return $stmt->execute(); // Mengembalikan true jika berhasil
+    }
+
+    public static function whereIn($column, array $values)
+    {
+        self::init();
+
+        if (empty($values)) {
+            return new ResultSet([]); // Kembalikan kosong kalau tidak ada value
+        }
+
+        // Buat placeholder sesuai jumlah data
+        $placeholders = implode(',', array_fill(0, count($values), '?'));
+
+        // Siapkan query
+        $query = "SELECT * FROM " . static::$table . " WHERE $column IN ($placeholders)";
+        $stmt = self::$db->prepare($query);
+
+        // Jalankan query dengan parameter array
+        $stmt->execute($values);
+
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return new ResultSet($results);
+    }
+
 }
